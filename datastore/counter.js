@@ -23,13 +23,11 @@ const readCounter = (callback) => {
       }
       resolve(data);
     });
-  })
-    .then(data => {
-      callback(null, Number(data));
-    })
-    .catch(err => {
-      callback(err, 0);
-    });
+  }).then(data => {
+    callback(null, Number(data));
+  }).catch(err => {
+    callback(err, 0);
+  });
 };
 
 const writeCounter = (count, callback) => {
