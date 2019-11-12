@@ -36,12 +36,13 @@ exports.readAll = (callback) => {
 };
 
 exports.readOne = (id, callback) => {
-  var text = items[id];
-  if (!text) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
+  fs.readFile(exports.dataDir + `/${id}.txt`, (err, data) => {
+    if (err) {
+      return callback(err);
+    }
+    var text = data.toString();
     callback(null, { id, text });
-  }
+  });
 };
 
 exports.update = (id, text, callback) => {
