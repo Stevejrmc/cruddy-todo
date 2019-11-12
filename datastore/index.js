@@ -26,12 +26,20 @@ exports.readAll = (callback) => {
     if (err) {
       return callback(err);
     }
-
-    var data = files.map(file => {
-      var id = file.slice(0, file.length - 4);
-      return { id, text: id };
+    Promise.all(files.map(file => {
+      return new Promise((resolve, reject) => {
+        var id = file.slice(0, file.length - 4);
+        fs.readFile(exports.dataDir + `/${file}`, (err, todo) => {
+          if (err) {
+            return callback(err);
+          }
+          var text = todo.toString();
+          resolve({id, text});
+        });
+      });
+    })).then(data => {
+      callback(null, data);
     });
-    callback(null, data);
   });
 };
 
