@@ -28,18 +28,23 @@ const readCounter = (callback) => {
       callback(null, Number(data));
     })
     .catch(err => {
-      callback(null, 0);
+      callback(err, 0);
     });
 };
 
 const writeCounter = (count, callback) => {
   var counterString = zeroPaddedNumber(count);
-  fs.writeFile(exports.counterFile, counterString, (err) => {
-    if (err) {
-      throw ('error writing counter');
-    } else {
-      callback(null, counterString);
-    }
+  new Promise((resolve, reject) => {
+    fs.writeFile(exports.counterFile, counterString, err => {
+      if (err) {
+        reject(err);
+      }
+      resolve(counterString);
+    });
+  }).then(data => {
+    callback(null, data);
+  }).catch(err => {
+    callback(err);
   });
 };
 
